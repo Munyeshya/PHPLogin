@@ -6,8 +6,16 @@
   },
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/",
       "dest": "/api/index.php"
+    },
+    {
+      "src": "/courses",
+      "dest": "/api/courses.php"
+    },
+    {
+      "src": "/logout",
+      "dest": "/api/logout.php"
     }
   ]
 }

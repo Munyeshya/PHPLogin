@@ -1,8 +1,14 @@
 <?php
 session_start();
 
-if (isset($_SESSION["username"])) {
-  
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+if (!isset($_SESSION["username"])) {
+  header("Location: /");
+  exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +19,7 @@ if (isset($_SESSION["username"])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    .course-img{
+    .course-img {
       height: 160px;
       object-fit: cover;
     }
@@ -34,7 +40,7 @@ if (isset($_SESSION["username"])) {
           <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
           <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
-          <li class="nav-item"><a class="nav-link text-warning" href="logout.php">Logout</a></li>
+          <li class="nav-item"><a class="nav-link text-warning" href="/logout">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -43,7 +49,7 @@ if (isset($_SESSION["username"])) {
   <header class="py-4 bg-white border-bottom text-center">
     <div class="container">
       <h1 class="h3 fw-bold mb-1">Our Courses</h1>
-      <p class="text-muted mb-0">Welcome, <?php echo $_SESSION["username"]; ?></p>
+      <p class="text-muted mb-0">Welcome, <?php echo htmlspecialchars($_SESSION["username"]); ?></p>
     </div>
   </header>
 
@@ -152,10 +158,3 @@ if (isset($_SESSION["username"])) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<?php
-} else {
-  header("Location: index.php");
-  exit;
-  }
-?>
-?>
