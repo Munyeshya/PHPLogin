@@ -1,31 +1,8 @@
-<?php
-session_start();
-
-$correct_username = "admin";
-$correct_password = "1234";
-$error = "";
-
-if (isset($_POST["username"]) && isset($_POST["password"])) {
-  $username = $_POST["username"];
-  $password = $_POST["password"];
-  $_SESSION["username"] = $username;
-  $_SESSION["password"] = $password;
-
-  if ($password == "") {
-    $error = "Password is required.";
-  } elseif ($_SESSION["username"] == $correct_username && $_SESSION["password"] == $correct_password) {
-    header("Location: courses.php");
-    exit;
-  } else {
-    $error = "Wrong username or password.";
-  }
-}
-?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <title>Signup</title>
 
   <style>
     * {
@@ -73,7 +50,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
       margin-top: 14px;
       padding: 10px;
       border: 0;
-      background: green;
+      background: blueviolet;
       color: white;
       font-weight: bold;
       margin-bottom: 20px;
@@ -102,7 +79,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 <body>
   <form method="post" action="">
-    <h2>Login with GET</h2>
+    <h2>Sign Up</h2>
 
     <label>Username</label>
     <input type="text" name="username">
@@ -110,15 +87,10 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     <label>Password</label>
     <input type="password" name="password">
 
-    <input type="submit" value="Login">
+    <input type="submit" value="Create Account">
 
-    <?php
-    if ($error != "") {
-      echo "<p>$error</p>";
-    }
-    ?>
 
-    <a href="signup.php" class="create-link">Create Account</a>
+    <a href="index.php" class="create-link">Login instead</a>
   </form>
 </body>
 </html>

@@ -2,7 +2,6 @@
 session_start();
 
 if (isset($_SESSION["username"])) {
-  
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,12 +9,20 @@ if (isset($_SESSION["username"])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Programming Courses</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
-    .course-img{
+    .course-img {
       height: 160px;
       object-fit: cover;
+    }
+
+    .video-frame {
+      width: 100%;
+      height: 300px;
+      border: 0;
     }
   </style>
 </head>
@@ -43,7 +50,7 @@ if (isset($_SESSION["username"])) {
   <header class="py-4 bg-white border-bottom text-center">
     <div class="container">
       <h1 class="h3 fw-bold mb-1">Our Courses</h1>
-      <p class="text-muted mb-0">Welcome, <?php echo $_SESSION["username"]; ?></p>
+      <p class="text-muted mb-0">Welcome, <?php echo htmlspecialchars($_SESSION["username"]); ?></p>
     </div>
   </header>
 
@@ -57,7 +64,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">PHP Basics</h5>
               <p class="card-text">Learn variables, forms, GET/POST, and simple projects.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#phpModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -68,7 +78,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">JavaScript</h5>
               <p class="card-text">Learn DOM, events, arrays, and build interactive pages.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#jsModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -79,7 +92,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">Python</h5>
               <p class="card-text">Start with basics, loops, functions, and simple scripts.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#pythonModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -90,7 +106,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">HTML & CSS</h5>
               <p class="card-text">Build pages with layout, colors, spacing, and responsive design.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#htmlModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -101,7 +120,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">Java</h5>
               <p class="card-text">Learn OOP, classes, methods, and console applications.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#javaModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -112,7 +134,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">C#</h5>
               <p class="card-text">Learn syntax, OOP, and build simple desktop apps.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#csharpModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -123,7 +148,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">C Programming</h5>
               <p class="card-text">Learn basics, memory, pointers, and small programs.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#cModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -134,7 +162,10 @@ if (isset($_SESSION["username"])) {
             <div class="card-body">
               <h5 class="card-title">C++</h5>
               <p class="card-text">Learn OOP, STL basics, and beginner data structures.</p>
-              <a href="#" class="btn btn-success btn-sm">Learn more</a>
+              <button class="btn btn-success btn-sm d-inline-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#cppModal">
+                <i class="bi bi-play-circle-fill"></i>
+                <span>Watch Video</span>
+              </button>
             </div>
           </div>
         </div>
@@ -149,6 +180,126 @@ if (isset($_SESSION["username"])) {
     </div>
   </footer>
 
+  <div class="modal fade" id="phpModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">PHP Basics</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/OK_JCtrrv-c" allowfullscreen></iframe>
+          <p class="mt-3">This video introduces PHP basics such as variables, forms, and simple dynamic pages.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="jsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">JavaScript</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/W6NZfCO5SIk" allowfullscreen></iframe>
+          <p class="mt-3">This video helps beginners learn JavaScript basics, functions, events, and page interaction.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="pythonModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Python</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/_uQrJ0TkZlc" allowfullscreen></iframe>
+          <p class="mt-3">This Python lesson is great for beginners who want to learn syntax, variables, and loops.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="htmlModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">HTML & CSS</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/qz0aGYrrlhU" allowfullscreen></iframe>
+          <p class="mt-3">Learn how to build web pages using HTML for structure and CSS for design.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="javaModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Java</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/eIrMbAQSU34" allowfullscreen></iframe>
+          <p class="mt-3">This video introduces Java programming, classes, methods, and object-oriented concepts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="csharpModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">C#</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/GhQdlIFylQ8" allowfullscreen></iframe>
+          <p class="mt-3">Watch this beginner video to understand C# syntax, variables, and basic programming logic.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="cModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">C Programming</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/KJgsSFOSQv0" allowfullscreen></iframe>
+          <p class="mt-3">This lesson explains C language basics, variables, loops, and simple program structure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="cppModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">C++</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe class="video-frame" src="https://www.youtube.com/embed/vLnPwxZdW4Y" allowfullscreen></iframe>
+          <p class="mt-3">This video is a beginner guide to C++ programming, OOP, and solving coding problems.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
@@ -156,6 +307,5 @@ if (isset($_SESSION["username"])) {
 } else {
   header("Location: index.php");
   exit;
-  }
-?>
+}
 ?>
