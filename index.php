@@ -5,14 +5,15 @@ $correct_username = "admin";
 $correct_password = "1234";
 $error = "";
 
-if (isset($_GET["username"]) && isset($_GET["password"])) {
-  $username = $_GET["username"];
-  $password = $_GET["password"];
+if (isset($_POST["username"]) && isset($_POST["password"])) {
+  $username = $_POST["username"];
+  $password = $_POST["password"];
+  $_SESSION["username"] = $username;
+  $_SESSION["password"] = $password;
 
   if ($password == "") {
     $error = "Password is required.";
-  } elseif ($username == $correct_username && $password == $correct_password) {
-    $_SESSION["username"] = $username;
+  } elseif ($_SESSION["username"] == $correct_username && $_SESSION["password"] == $correct_password) {
     header("Location: courses.php");
     exit;
   } else {
@@ -100,7 +101,7 @@ if (isset($_GET["username"]) && isset($_GET["password"])) {
 </head>
 
 <body>
-  <form method="get" action="">
+  <form method="post" action="">
     <h2>Login with GET</h2>
 
     <label>Username</label>
