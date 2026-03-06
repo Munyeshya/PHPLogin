@@ -1,24 +1,20 @@
 <?php
 session_start();
 
-if (isset($_SESSION["username"])) {
-  header("Location: /courses");
-  exit;
-}
-
 $correct_username = "admin";
 $correct_password = "1234";
 $error = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $username = $_POST["username"] ?? "";
-  $password = $_POST["password"] ?? "";
+if (isset($_POST["username"]) && isset($_POST["password"])) {
+  $username = $_POST["username"];
+  $password = $_POST["password"];
+  $_SESSION["username"] = $username;
+  $_SESSION["password"] = $password;
 
   if ($password == "") {
     $error = "Password is required.";
-  } elseif ($username == $correct_username && $password == $correct_password) {
-    $_SESSION["username"] = $username;
-    header("Location: /courses");
+  } elseif ($_SESSION["username"] == $correct_username && $_SESSION["password"] == $correct_password) {
+    header("Location: courses.php");
     exit;
   } else {
     $error = "Wrong username or password.";
@@ -35,18 +31,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     * {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
       font-family: Arial, sans-serif;
       background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb');
       background-size: cover;
-      background-position: center;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     form {
@@ -54,12 +44,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       background: white;
       border: 1px solid #ddd;
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
+      margin-top: 10%;
+      margin-left: 37%;
     }
 
     h2 {
-      margin-bottom: 12px;
-      text-align: center;
+      margin: 0 0 12px;
     }
 
     label {
@@ -74,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       padding: 10px;
       border: 1px solid grey;
       margin-top: 6px;
+      box-sizing: border-box;
     }
 
     input[type="submit"] {
@@ -110,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <form method="post" action="">
-    <h2>Login</h2>
+    <h2>Login with GET</h2>
 
     <label>Username</label>
     <input type="text" name="username">
@@ -126,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     ?>
 
-    <a href="#" class="create-link">Create Account</a>
+    <a href="create-account.php" class="create-link">Create Account</a>
   </form>
 </body>
 </html>
