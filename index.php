@@ -38,6 +38,14 @@ $isAdmin = $isLoggedIn && isset($_SESSION["role"]) && $_SESSION["role"] === "adm
       color: white;
       padding: 90px 0;
     }
+
+    .teaser-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -119,7 +127,7 @@ $isAdmin = $isLoggedIn && isset($_SESSION["role"]) && $_SESSION["role"] === "adm
                   <button
                     class="btn btn-secondary btn-sm d-inline-flex align-items-center gap-1 mt-auto"
                     data-bs-toggle="modal"
-                    data-bs-target="#loginRequiredModal"
+                    data-bs-target="#guestLessonModal<?php echo $lesson["id"]; ?>"
                   >
                     <i class="bi bi-lock-fill"></i>
                     <span>Watch Video</span>
@@ -136,25 +144,9 @@ $isAdmin = $isLoggedIn && isset($_SESSION["role"]) && $_SESSION["role"] === "adm
 
   <footer class="bg-dark text-white py-3" id="footer">
     <div class="container text-center">
-      <small>© <?php echo date("Y"); ?> CodeCourses</small>
+      <small>© <?php echo date("Y"); ?> <a href="">CodeCourses</small>
     </div>
   </footer>
-
-  <div class="modal fade" id="loginRequiredModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Login Required</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <p class="mb-3">Please login or create an account before you can watch a lesson video.</p>
-          <a href="login.php" class="btn btn-success me-2">Login</a>
-          <a href="signup.php" class="btn btn-outline-success">Create Account</a>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <?php if ($isLoggedIn) : ?>
     <?php foreach ($lessons as $lesson) : ?>
@@ -172,6 +164,36 @@ $isAdmin = $isLoggedIn && isset($_SESSION["role"]) && $_SESSION["role"] === "adm
                 allowfullscreen
               ></iframe>
               <p class="mt-3 mb-0"><?php echo htmlspecialchars($lesson["short_note"]); ?></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  <?php else : ?>
+    <?php foreach ($lessons as $lesson) : ?>
+      <div class="modal fade" id="guestLessonModal<?php echo $lesson["id"]; ?>" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"><?php echo htmlspecialchars($lesson["title"]); ?></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <img
+                src="<?php echo htmlspecialchars($lesson["image_url"]); ?>"
+                alt="<?php echo htmlspecialchars($lesson["title"]); ?>"
+                class="teaser-img"
+              >
+
+              <p class="mb-2"><strong>Lesson teaser:</strong></p>
+              <p class="mb-2"><?php echo htmlspecialchars($lesson["description"]); ?></p>
+              <p class="text-muted mb-3"><?php echo htmlspecialchars($lesson["short_note"]); ?></p>
+
+              <div class="border-top pt-3">
+                <p class="mb-3">Login or create an account to watch the full lesson video.</p>
+                <a href="login.php" class="btn btn-success me-2">Login</a>
+                <a href="signup.php" class="btn btn-outline-success">Create Account</a>
+              </div>
             </div>
           </div>
         </div>
