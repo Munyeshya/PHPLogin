@@ -1,124 +1,184 @@
 <?php
 session_start();
+require_once "db.php";
 
-$correct_username = "admin";
-$correct_password = "1234";
-$error = "";
+$stmt = $pdo->query("SELECT * FROM lessons ORDER BY id DESC");
+$lessons = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (isset($_POST["username"]) && isset($_POST["password"])) {
-  $username = $_POST["username"];
-  $password = $_POST["password"];
-  $_SESSION["username"] = $username;
-  $_SESSION["password"] = $password;
-
-  if ($password == "") {
-    $error = "Password is required.";
-  } elseif ($_SESSION["username"] == $correct_username && $_SESSION["password"] == $correct_password) {
-    header("Location: courses.php");
-    exit;
-  } else {
-    $error = "Wrong username or password.";
-  }
-}
+$isLoggedIn = isset($_SESSION["username"]);
+$isAdmin = $isLoggedIn && isset($_SESSION["role"]) && $_SESSION["role"] === "admin";
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming Courses</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
+    .course-img {
+      height: 180px;
+      object-fit: cover;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb');
-      background-size: cover;
-    }
-
-    form {
-      width: 360px;
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 18px;
-      margin-top: 10%;
-      margin-left: 37%;
-    }
-
-    h2 {
-      margin: 0 0 12px;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-
-    input[type="text"],
-    input[type="password"] {
+    .video-frame {
       width: 100%;
-      padding: 10px;
-      border: 1px solid grey;
-      margin-top: 6px;
-      box-sizing: border-box;
-    }
-
-    input[type="submit"] {
-      width: 100%;
-      margin-top: 14px;
-      padding: 10px;
+      height: 350px;
       border: 0;
-      background: green;
+    }
+
+    .hero-section {
+      background: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
+        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80');
+      background-size: cover;
+      background-position: center;
       color: white;
-      font-weight: bold;
-      margin-bottom: 20px;
-      cursor: pointer;
-    }
-
-    p {
-      font-size: 14px;
-      color: red;
-      border: 2px dotted red;
-      padding: 8px;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .create-link {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      color: green;
-      font-size: 14px;
-      margin-top: 10px;
+      padding: 90px 0;
     }
   </style>
 </head>
+<body class="bg-light">
 
-<body>
-  <form method="post" action="">
-    <h2>Login with GET</h2>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.php">CodeCourses</a>
 
-    <label>Username</label>
-    <input type="text" name="username">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <label>Password</label>
-    <input type="password" name="password">
+      <div class="collapse navbar-collapse" id="menu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
 
-    <input type="submit" value="Login">
+          <?php if (!$isLoggedIn) : ?>
+            <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="signup.php">Sign Up</a></li>
+          <?php else : ?>
+            <?php if ($isAdmin) : ?>
+              <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
+            <?php endif; ?>
+            <li class="nav-item"><a class="nav-link text-warning" href="logout.php">Logout</a></li>
+          <?php endif; ?>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <?php
-    if ($error != "") {
-      echo "<p>$error</p>";
-    }
-    ?>
+  <section class="hero-section text-center">
+    <div class="container">
+      <h1 class="display-5 fw-bold">Learn Programming Step by Step</h1>
+      <p class="lead mb-4">Browse lessons freely and sign in to watch full videos.</p>
 
-    <a href="signup.php" class="create-link">Create Account</a>
-  </form>
+      <?php if ($isLoggedIn) : ?>
+        <p class="mb-0">Welcome, <strong><?php echo htmlspecialchars($_SESSION["username"]); ?></strong></p>
+      <?php else : ?>
+        <a href="login.php" class="btn btn-success btn-lg me-2">Login</a>
+        <a href="signup.php" class="btn btn-outline-light btn-lg">Create Account</a>
+      <?php endif; ?>
+    </div>
+  </section>
+
+  <header class="py-4 bg-white border-bottom text-center">
+    <div class="container">
+      <h2 class="h3 fw-bold mb-1">Our Lessons</h2>
+      <p class="text-muted mb-0">Choose any lesson below</p>
+    </div>
+  </header>
+
+  <main class="py-4" id="courses">
+    <div class="container">
+      <div class="row g-4">
+
+        <?php foreach ($lessons as $lesson) : ?>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img
+                class="card-img-top course-img"
+                src="<?php echo htmlspecialchars($lesson["image_url"]); ?>"
+                alt="<?php echo htmlspecialchars($lesson["title"]); ?>"
+              >
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title"><?php echo htmlspecialchars($lesson["title"]); ?></h5>
+                <p class="card-text"><?php echo htmlspecialchars($lesson["description"]); ?></p>
+
+                <?php if ($isLoggedIn) : ?>
+                  <button
+                    class="btn btn-success btn-sm d-inline-flex align-items-center gap-1 mt-auto"
+                    data-bs-toggle="modal"
+                    data-bs-target="#lessonModal<?php echo $lesson["id"]; ?>"
+                  >
+                    <i class="bi bi-play-circle-fill"></i>
+                    <span>Watch Video</span>
+                  </button>
+                <?php else : ?>
+                  <button
+                    class="btn btn-secondary btn-sm d-inline-flex align-items-center gap-1 mt-auto"
+                    data-bs-toggle="modal"
+                    data-bs-target="#loginRequiredModal"
+                  >
+                    <i class="bi bi-lock-fill"></i>
+                    <span>Watch Video</span>
+                  </button>
+                <?php endif; ?>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-dark text-white py-3" id="footer">
+    <div class="container text-center">
+      <small>© <?php echo date("Y"); ?> CodeCourses</small>
+    </div>
+  </footer>
+
+  <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login Required</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-3">Please login or create an account before you can watch a lesson video.</p>
+          <a href="login.php" class="btn btn-success me-2">Login</a>
+          <a href="signup.php" class="btn btn-outline-success">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <?php if ($isLoggedIn) : ?>
+    <?php foreach ($lessons as $lesson) : ?>
+      <div class="modal fade" id="lessonModal<?php echo $lesson["id"]; ?>" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"><?php echo htmlspecialchars($lesson["title"]); ?></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <iframe
+                class="video-frame"
+                src="<?php echo htmlspecialchars($lesson["video_url"]); ?>"
+                allowfullscreen
+              ></iframe>
+              <p class="mt-3 mb-0"><?php echo htmlspecialchars($lesson["short_note"]); ?></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -8,26 +8,27 @@ if (isset($_SESSION["username"])) {
 }
 
 $error = "";
-$success = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST["username"] ?? "");
     $password = trim($_POST["password"] ?? "");
-    $role = "student";
 
     if ($username === "" || $password === "") {
         $error = "Username and password are required.";
     } else {
-        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
-        $checkStmt->execute([$username]);
-        $existingUser = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+        $stmt->execute([$username, $password]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($existingUser) {
-            $error = "Username already exists.";
+        if ($user) {
+            $_SESSION["user_id"] = $user["id"];
+            $_SESSION["username"] = $user["username"];
+            $_SESSION["role"] = $user["role"];
+
+            header("Location: index.php");
+            exit;
         } else {
-            $insertStmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-            $insertStmt->execute([$username, $password, $role]);
-            $success = "Account created successfully. You can now login.";
+            $error = "Wrong username or password.";
         }
     }
 }
@@ -36,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Sign Up</title>
+  <title>Login</title>
 
   <style>
     * {
@@ -95,22 +96,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     p {
       font-size: 14px;
+      color: red;
+      border: 2px dotted red;
       padding: 8px;
       text-align: center;
       margin-top: 10px;
     }
 
-    .error {
-      color: red;
-      border: 2px dotted red;
-    }
-
-    .success {
-      color: green;
-      border: 2px dotted green;
-    }
-
-    .login-link {
+    .create-link {
       display: block;
       text-align: center;
       text-decoration: none;
@@ -122,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
   <form method="post" action="">
-    <h2>Create Account</h2>
+    <h2>Login</h2>
 
     <label>Username</label>
     <input type="text" name="username">
@@ -130,17 +123,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <label>Password</label>
     <input type="password" name="password">
 
-    <input type="submit" value="Sign Up">
+    <input type="submit" value="Login">
 
     <?php if ($error != "") : ?>
-      <p class="error"><?php echo htmlspecialchars($error); ?></p>
+      <p><?php echo htmlspecialchars($error); ?></p>
     <?php endif; ?>
 
-    <?php if ($success != "") : ?>
-      <p class="success"><?php echo htmlspecialchars($success); ?></p>
-    <?php endif; ?>
-
-    <a href="login.php" class="login-link">Go to Login</a>
+    <a href="signup.php" class="create-link">Create Account</a>
   </form>
 </body>
 </html>
