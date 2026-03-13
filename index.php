@@ -144,7 +144,7 @@ $isAdmin = $isLoggedIn && isset($_SESSION["role"]) && $_SESSION["role"] === "adm
 
   <footer class="bg-dark text-white py-3" id="footer">
     <div class="container text-center">
-      <small>© <?php echo date("Y"); ?> <a href="">CodeCourses</small>
+      <small>© <?php echo date("Y"); ?> <a href="index2.php">CodeCourses</a></small>
     </div>
   </footer>
 
